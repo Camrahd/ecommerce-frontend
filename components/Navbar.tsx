@@ -9,8 +9,11 @@ export default function Navbar() {
           eCommerce Store
         </Link>
         <div className="space-x-4">
-          <Link href="/categories" className="text-white hover:text-gray-300">
-            Categories
+          <Link href="/login" className="text-white hover:text-gray-300">
+            Login
+          </Link>
+          <Link href="/signup" className="text-white hover:text-gray-300">
+            Sign Up
           </Link>
           <Link href="/cart" className="text-white hover:text-gray-300">
             Cart

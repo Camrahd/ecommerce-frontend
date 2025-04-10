@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 
-// Define the shape of the error response from your backend (if known)
+// Define the shape of the error response from your backend
 interface ErrorResponse {
   message?: string;
 }
@@ -18,6 +18,7 @@ export default function SignupPage() {
 
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -31,35 +32,42 @@ export default function SignupPage() {
     e.preventDefault();
     setMessage(null);
     setError(null);
+    setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8080/register", {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      });
-
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/register`,
+        {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }
+      );
       setMessage(response.data);
     } catch (err) {
-      // Specify the type of err as AxiosError with an optional ErrorResponse
       const axiosError = err as AxiosError<ErrorResponse>;
       setError(
         axiosError.response?.data?.message || "Failed to register. Please try again."
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300">
       <Navbar />
-      <div className="container mx-auto px-4 py-16 flex justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-            Sign Up
+      <div className="container mx-auto px-4 py-16 flex justify-center items-center">
+        <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200">
+          <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center tracking-tight">
+            Create Your Account
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-gray-700">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Name
               </label>
               <input
@@ -67,13 +75,16 @@ export default function SignupPage() {
                 id="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-gray-700 placeholder-gray-400"
                 placeholder="Enter your name"
                 required
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Email
               </label>
               <input
@@ -81,13 +92,16 @@ export default function SignupPage() {
                 id="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-gray-700 placeholder-gray-400"
                 placeholder="Enter your email"
                 required
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Password
               </label>
               <input
@@ -95,26 +109,55 @@ export default function SignupPage() {
                 id="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-gray-700 placeholder-gray-400"
                 placeholder="Enter your password"
                 required
               />
             </div>
             <button
               type="submit"
-              className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+              disabled={isLoading}
+              className={`w-full px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-300 font-semibold text-lg shadow-md ${
+                isLoading ? "opacity-60 cursor-not-allowed" : ""
+              }`}
             >
-              Sign Up
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="animate-spin h-5 w-5 mr-2 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    />
+                  </svg>
+                  Signing Up...
+                </span>
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </form>
 
           {message && (
-            <div className="mt-4 p-3 bg-green-100 text-green-700 rounded-lg text-center">
+            <div className="mt-6 p-4 bg-green-50 text-green-800 rounded-lg text-center border border-green-200 animate-fade-in">
               {message}
             </div>
           )}
           {error && (
-            <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-center">
+            <div className="mt-6 p-4 bg-red-50 text-red-800 rounded-lg text-center border border-red-200 animate-fade-in">
               {error}
             </div>
           )}
