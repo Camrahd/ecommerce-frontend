@@ -54,9 +54,9 @@ export default function ElectronicsPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300">
       <Navbar />
       <div className="container mx-auto px-4 py-16">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Electronics</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">Food</h1>
         {products.length === 0 ? (
-          <p className="text-gray-600">No electronics products available.</p>
+          <p className="text-gray-600">No food products available.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product) => (
