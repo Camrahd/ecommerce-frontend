@@ -10,6 +10,13 @@ interface ErrorResponse {
   message?: string;
 }
 
+// Define the shape of the login response
+interface LoginResponse {
+  userId: number;
+  username: string;
+  message: string;
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -35,14 +42,19 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
+      const response = await axios.post<LoginResponse>(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/login`,
         {
           email: formData.email,
           password: formData.password,
         }
       );
-      setMessage(response.data);
+
+      // Store userId and username in localStorage
+      localStorage.setItem("userId", response.data.userId.toString());
+      localStorage.setItem("username", response.data.username);
+
+      setMessage(response.data.message);
       setTimeout(() => {
         router.push("/");
       }, 2000);

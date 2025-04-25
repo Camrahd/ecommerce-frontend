@@ -1,4 +1,3 @@
-// app/categories/food/page.tsx
 "use client";
 
 import Navbar from "@/components/Navbar";
@@ -9,30 +8,30 @@ import axios from "axios";
 interface Product {
   id: number;
   name: string;
-  category: string;
   amount: number;
   stock: number;
-  image: string;
+  categoryId: number;
+  description?: string;
 }
 
-export default function FoodPage() {
+export default function ElectronicsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchFoodProducts = async () => {
+    const fetchElectronicsProducts = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/catwiseproducts/3`); // Category ID 3 for food
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/catwiseproducts/3`);
         setProducts(response.data);
       } catch (error) {
-        setError("Failed to fetch food products. Please try again.");
-        console.error("Error fetching food products:", error);
+        setError("Failed to fetch electronics products. Please try again.");
+        console.error("Error fetching electronics products:", error);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchFoodProducts();
+    fetchElectronicsProducts();
   }, []);
 
   if (isLoading) {
@@ -55,9 +54,9 @@ export default function FoodPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300">
       <Navbar />
       <div className="container mx-auto px-4 py-16">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Food</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">Electronics</h1>
         {products.length === 0 ? (
-          <p className="text-gray-600">No food products available.</p>
+          <p className="text-gray-600">No electronics products available.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product) => (
@@ -67,7 +66,8 @@ export default function FoodPage() {
                 name={product.name}
                 amount={product.amount}
                 stock={product.stock}
-                image={product.image || "/images/products/placeholder.jpg"}
+                categoryId={3} 
+                image="/images/products/placeholder.jpg" // Use the placeholder image
               />
             ))}
           </div>

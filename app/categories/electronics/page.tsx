@@ -1,4 +1,3 @@
-// app/categories/electronics/page.tsx
 "use client";
 
 import Navbar from "@/components/Navbar";
@@ -9,10 +8,10 @@ import axios from "axios";
 interface Product {
   id: number;
   name: string;
-  category: string;
   amount: number;
   stock: number;
-  image: string;
+  categoryId: number;
+  description?: string;
 }
 
 export default function ElectronicsPage() {
@@ -67,7 +66,8 @@ export default function ElectronicsPage() {
                 name={product.name}
                 amount={product.amount}
                 stock={product.stock}
-                image={product.image || "/images/products/placeholder.jpg"}
+                categoryId={1} // Hardcoded since this page is for categoryId 1 (Electronics)
+                image="/images/products/placeholder.jpg" // Use the placeholder image
               />
             ))}
           </div>

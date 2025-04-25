@@ -3,19 +3,25 @@
 import Navbar from "@/components/Navbar";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
-// Define the shape of the error response from your backend
 interface ErrorResponse {
   message?: string;
 }
 
+interface SignupResponse {
+  userId: number;
+  username: string;
+  message: string;
+}
+
 export default function SignupPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
-
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,19 +41,27 @@ export default function SignupPage() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/register`,
+      const response = await axios.post<SignupResponse>(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/signup`,
         {
           name: formData.name,
           email: formData.email,
           password: formData.password,
         }
       );
-      setMessage(response.data);
+
+      // Store userId and username in localStorage
+      localStorage.setItem("userId", response.data.userId.toString());
+      localStorage.setItem("username", response.data.username);
+
+      setMessage(response.data.message);
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
     } catch (err) {
       const axiosError = err as AxiosError<ErrorResponse>;
       setError(
-        axiosError.response?.data?.message || "Failed to register. Please try again."
+        axiosError.response?.data?.message || "Failed to sign up. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -60,7 +74,7 @@ export default function SignupPage() {
       <div className="container mx-auto px-4 py-16 flex justify-center items-center">
         <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200">
           <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center tracking-tight">
-            Create Your Account
+            Create an Account
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -75,7 +89,7 @@ export default function SignupPage() {
                 id="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-gray-700 placeholder-gray-400"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-700 placeholder-gray-400"
                 placeholder="Enter your name"
                 required
               />
@@ -92,7 +106,7 @@ export default function SignupPage() {
                 id="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-gray-700 placeholder-gray-400"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-700 placeholder-gray-400"
                 placeholder="Enter your email"
                 required
               />
@@ -109,7 +123,7 @@ export default function SignupPage() {
                 id="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-gray-700 placeholder-gray-400"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-700 placeholder-gray-400"
                 placeholder="Enter your password"
                 required
               />
@@ -117,7 +131,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-300 font-semibold text-lg shadow-md ${
+              className={`w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 font-semibold text-lg shadow-md ${
                 isLoading ? "opacity-60 cursor-not-allowed" : ""
               }`}
             >

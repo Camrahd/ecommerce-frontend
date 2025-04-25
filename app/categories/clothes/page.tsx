@@ -1,4 +1,3 @@
-// app/categories/clothes/page.tsx
 "use client";
 
 import Navbar from "@/components/Navbar";
@@ -9,30 +8,30 @@ import axios from "axios";
 interface Product {
   id: number;
   name: string;
-  category: string;
   amount: number;
   stock: number;
-  image: string;
+  categoryId: number;
+  description?: string;
 }
 
-export default function ClothesPage() {
+export default function ElectronicsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchClothesProducts = async () => {
+    const fetchElectronicsProducts = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/catwiseproducts/2`); // Category ID 2 for clothes
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/catwiseproducts/2`);
         setProducts(response.data);
       } catch (error) {
-        setError("Failed to fetch clothes products. Please try again.");
-        console.error("Error fetching clothes products:", error);
+        setError("Failed to fetch electronics products. Please try again.");
+        console.error("Error fetching electronics products:", error);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchClothesProducts();
+    fetchElectronicsProducts();
   }, []);
 
   if (isLoading) {
@@ -55,9 +54,9 @@ export default function ClothesPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300">
       <Navbar />
       <div className="container mx-auto px-4 py-16">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Clothes</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">Electronics</h1>
         {products.length === 0 ? (
-          <p className="text-gray-600">No clothes products available.</p>
+          <p className="text-gray-600">No electronics products available.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product) => (
@@ -67,7 +66,8 @@ export default function ClothesPage() {
                 name={product.name}
                 amount={product.amount}
                 stock={product.stock}
-                image={product.image || "/images/products/placeholder.jpg"}
+                categoryId={2} 
+                image="/images/products/placeholder.jpg" // Use the placeholder image
               />
             ))}
           </div>
