@@ -42,7 +42,7 @@ export default function SignupPage() {
 
     try {
       const response = await axios.post<SignupResponse>(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/signup`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/register`,
         {
           name: formData.name,
           email: formData.email,
