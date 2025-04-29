@@ -1,0 +1,1 @@
+node_modules .next npm-debug.log Dockerfile* docker-compose* .env .env.local .git .gitignore
