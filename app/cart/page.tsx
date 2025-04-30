@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useCartStore } from "@/store/cartStore";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 interface CartItem {
   cartId: number;
@@ -64,6 +65,24 @@ export default function CartPage() {
     router.push("/checkout");
   };
 
+  const handleDelete = async (cartId: number) => {
+    try {
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/cart/${cartId}`
+      );
+      if (response.status === 200) {
+        // Remove the item from the local cart state
+        const updatedCartItems = cartItems.filter((item) => item.cartId !== cartId);
+        setCartItems(updatedCartItems);
+        toast.success("Item removed from cart!", { position: "top-right" });
+      }
+    } catch (err) {
+      console.error("Error removing item from cart:", err);
+      setError("Failed to remove item from cart. Please try again.");
+      toast.error("Failed to remove item from cart.", { position: "top-right" });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
@@ -96,6 +115,12 @@ export default function CartPage() {
                     <p className="text-gray-600">Price: ${item.cost.toFixed(2)}</p>
                     <p className="text-gray-600">Quantity: {item.quantity}</p>
                   </div>
+                  <button
+                    onClick={() => handleDelete(item.cartId)}
+                    className="ml-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                  >
+                    Delete
+                  </button>
                 </div>
               ))}
             </div>
