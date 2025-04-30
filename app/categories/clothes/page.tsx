@@ -67,7 +67,7 @@ export default function ElectronicsPage() {
                 amount={product.amount}
                 stock={product.stock}
                 categoryId={2} 
-                image="/images/products/placeholder.jpg" // Use the placeholder image
+                image="/images/categories/clothes.jpg" // Use the placeholder image
               />
             ))}
           </div>

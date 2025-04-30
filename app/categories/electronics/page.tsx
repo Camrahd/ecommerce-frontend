@@ -67,7 +67,7 @@ export default function ElectronicsPage() {
                 amount={product.amount}
                 stock={product.stock}
                 categoryId={1} // Hardcoded since this page is for categoryId 1 (Electronics)
-                image="/images/products/placeholder.jpg" // Use the placeholder image
+                image="/images/categories/electronics.jpg" // Use the placeholder image
               />
             ))}
           </div>
