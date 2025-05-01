@@ -39,6 +39,9 @@ export default function Navbar() {
           {user.userId ? (
             <>
               <span className="text-white">Welcome, {user.username}</span>
+              <Link href="/orders" className="text-white hover:text-gray-300">
+                My Orders
+              </Link>
               <Link href="/cart" className="text-white hover:text-gray-300">
                 Cart ({cartItemCount})
               </Link>

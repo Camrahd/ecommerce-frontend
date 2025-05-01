@@ -12,6 +12,12 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [deliveryAddress, setDeliveryAddress] = useState<string>("");
+
+  // Calculate total amount
+  const totalAmount = cartItems.reduce((total, item) => {
+    return total + item.cost * item.quantity;
+  }, 0);
 
   const handlePlaceOrder = async () => {
     const userId = localStorage.getItem("userId");
@@ -22,6 +28,11 @@ export default function CheckoutPage() {
 
     if (cartItems.length === 0) {
       setError("Your cart is empty.");
+      return;
+    }
+
+    if (!deliveryAddress.trim()) {
+      setError("Please provide a delivery address.");
       return;
     }
 
@@ -36,6 +47,7 @@ export default function CheckoutPage() {
           {
             userId: parseInt(userId),
             productId: item.productId,
+            deliveryAddress: deliveryAddress, // Include delivery address
           }
         );
       }
@@ -88,9 +100,32 @@ export default function CheckoutPage() {
                     </h2>
                     <p className="text-gray-600">Price: ${item.cost.toFixed(2)}</p>
                     <p className="text-gray-600">Quantity: {item.quantity}</p>
+                    <p className="text-gray-600">
+                      Subtotal: ${(item.cost * item.quantity).toFixed(2)}
+                    </p>
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="mt-6 p-4 bg-white rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Order Summary
+              </h2>
+              <p className="text-gray-600 mt-2">
+                Total Amount: ${totalAmount.toFixed(2)}
+              </p>
+            </div>
+            <div className="mt-6 p-4 bg-white rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Delivery Address
+              </h2>
+              <textarea
+                value={deliveryAddress}
+                onChange={(e) => setDeliveryAddress(e.target.value)}
+                placeholder="Enter your delivery address"
+                className="w-full mt-2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                rows={4}
+              />
             </div>
             <div className="mt-6 flex justify-center">
               <button
