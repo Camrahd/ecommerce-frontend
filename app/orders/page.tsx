@@ -11,6 +11,7 @@ interface Order {
   username: string;
   productId: number;
   productName: string;
+  address: string;
 }
 
 export default function OrdersPage() {

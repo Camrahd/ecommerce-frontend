@@ -12,7 +12,7 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [deliveryAddress, setDeliveryAddress] = useState<string>("");
+  const [address, setAddress] = useState<string>(""); // Changed from deliveryAddress to address
 
   // Calculate total amount
   const totalAmount = cartItems.reduce((total, item) => {
@@ -31,7 +31,7 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (!deliveryAddress.trim()) {
+    if (!address.trim()) { // Changed from deliveryAddress to address
       setError("Please provide a delivery address.");
       return;
     }
@@ -47,7 +47,7 @@ export default function CheckoutPage() {
           {
             userId: parseInt(userId),
             productId: item.productId,
-            deliveryAddress: deliveryAddress, // Include delivery address
+            deliveryAddress: address, // Changed from address to deliveryAddress to match backend expectation
           }
         );
       }
@@ -120,8 +120,8 @@ export default function CheckoutPage() {
                 Delivery Address
               </h2>
               <textarea
-                value={deliveryAddress}
-                onChange={(e) => setDeliveryAddress(e.target.value)}
+                value={address} // Changed from deliveryAddress to address
+                onChange={(e) => setAddress(e.target.value)} // Changed from setDeliveryAddress to setAddress
                 placeholder="Enter your delivery address"
                 className="w-full mt-2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                 rows={4}
