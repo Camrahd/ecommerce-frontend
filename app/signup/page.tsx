@@ -1,9 +1,9 @@
-// app/signup/page.tsx
 "use client";
 import Navbar from "@/components/Navbar";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import Link from "next/link"; // Import Link component
 
 interface ErrorResponse {
   message?: string;
@@ -21,6 +21,7 @@ export default function SignupPage() {
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -39,6 +40,13 @@ export default function SignupPage() {
     setMessage(null);
     setError(null);
     setIsLoading(true);
+
+    // Validate that passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match. Please try again.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.post<SignupResponse>(
@@ -128,6 +136,23 @@ export default function SignupPage() {
                 required
               />
             </div>
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-700 placeholder-gray-400"
+                placeholder="Confirm your password"
+                required
+              />
+            </div>
             <button
               type="submit"
               disabled={isLoading}
@@ -175,6 +200,16 @@ export default function SignupPage() {
               {error}
             </div>
           )}
+
+          {/* Add the "Already registered? Login" link */}
+          <div className="mt-4 text-center">
+            <p className="text-sm text-gray-600">
+              Already registered?{" "}
+              <Link href="/login" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                Login
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

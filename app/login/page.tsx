@@ -1,9 +1,9 @@
-// app/login/page.tsx
 "use client";
 import Navbar from "@/components/Navbar";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import Link from "next/link"; // Import Link component
 
 // Define the shape of the error response from your backend
 interface ErrorResponse {
@@ -158,6 +158,16 @@ export default function LoginPage() {
               {error}
             </div>
           )}
+
+          {/* Add the "Not registered? Register" link */}
+          <div className="mt-4 text-center">
+            <p className="text-sm text-gray-600">
+              Not registered?{" "}
+              <Link href="/signup" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                Register
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
